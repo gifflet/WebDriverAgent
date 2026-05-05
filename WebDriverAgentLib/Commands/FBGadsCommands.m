@@ -11,7 +11,10 @@
 
 @import UniformTypeIdentifiers;
 
+#import "FBAudioWebSocketClient.h"
 #import "FBCapabilities.h"
+#import "XCUIApplication.h"
+
 #import "FBConfiguration.h"
 #import "FBProtocolHelpers.h"
 #import "FBRouteRequest.h"
@@ -51,7 +54,343 @@
     [[FBRoute POST:@"/wda/dragDrop"].withoutSession respondWithTarget:self action:@selector(handleDragDrop:)],
     [[FBRoute POST:@"/wda/edgeSwipe"].withoutSession respondWithTarget:self action:@selector(handleEdgeSwipe:)],
     [[FBRoute POST:@"/wda/twoFingerScroll"].withoutSession respondWithTarget:self action:@selector(handleTwoFingerScroll:)],
+    [[FBRoute POST:@"/gads/audio/start"].withoutSession respondWithTarget:self action:@selector(handleAudioStart:)],
+    [[FBRoute POST:@"/gads/audio/stop"].withoutSession respondWithTarget:self action:@selector(handleAudioStop:)],
+    [[FBRoute POST:@"/gads/audio/prepare"].withoutSession respondWithTarget:self action:@selector(handleAudioPrepare:)],
   ];
+}
+
+// Must match FBAudioBroadcastPickerLaunchArgument in IntegrationApp.
+static NSString *const FBGadsAudioPickerLaunchArgument = @"-gads-audio-picker";
+// Must match the observer name in WebDriverAgentBroadcast/SampleHandler.swift.
+static NSString *const FBGadsAudioBroadcastShouldStopNotification = @"io.gads.wda.audio.broadcastShouldStop";
+// Must match the host bundle id used to embed the broadcast extension (see PRD §D1).
+static NSString *const FBGadsIntegrationAppBundleIdentifier = @"br.com.zeevo.IntegrationApp";
+
+#pragma mark - Audio forwarding
+
+/**
+ * Start the WebSocket forwarder runner→provider.
+ * Body: { "host": "<provider host>", "port": <uint16> }.
+ * Idempotent — calling twice with new host/port supersedes the first.
+ *
+ * Note: this only opens the runner→provider WebSocket. Triggering the broadcast
+ * picker on the device is `/gads/audio/prepare` (task #8).
+ */
++ (id<FBResponsePayload>)handleAudioStart:(FBRouteRequest *)request
+{
+  NSString *host = (NSString *)request.arguments[@"host"];
+  if (![host isKindOfClass:NSString.class] || host.length == 0) {
+    return FBResponseWithStatus([FBCommandStatus invalidArgumentErrorWithMessage:@"host is required" traceback:nil]);
+  }
+  NSNumber *portNumber = (NSNumber *)request.arguments[@"port"];
+  if (![portNumber isKindOfClass:NSNumber.class]) {
+    return FBResponseWithStatus([FBCommandStatus invalidArgumentErrorWithMessage:@"port is required" traceback:nil]);
+  }
+  NSInteger portValue = portNumber.integerValue;
+  if (portValue <= 0 || portValue > UINT16_MAX) {
+    return FBResponseWithStatus([FBCommandStatus invalidArgumentErrorWithMessage:@"port out of range" traceback:nil]);
+  }
+  [[FBAudioWebSocketClient sharedClient] connectToHost:host port:(uint16_t)portValue];
+  return FBResponseWithOK();
+}
+
++ (id<FBResponsePayload>)handleAudioStop:(FBRouteRequest *)request
+{
+  // Tell the broadcast extension to call finishBroadcastWithError: (PRD §RF05).
+  // The Darwin notification is the only IPC channel that can wake an extension
+  // from another process (CFMessagePort/Mach are sandbox-blocked).
+  CFNotificationCenterPostNotification(
+    CFNotificationCenterGetDarwinNotifyCenter(),
+    (__bridge CFStringRef)FBGadsAudioBroadcastShouldStopNotification,
+    NULL, NULL, true);
+  [[FBAudioWebSocketClient sharedClient] disconnect];
+  return FBResponseWithOK();
+}
+
+/**
+ * Bring `IntegrationApp` to foreground with the broadcast picker visible
+ * so the user can tap it (PRD §D4 — paridade UX with Android Allow dialog).
+ *
+ * Provider calls this from `WebRTCSession` start when `AudioStreamEnabled=true`
+ * (paralelo ao `android_stream_webrtc.go:525–536`).
+ */
++ (id<FBResponsePayload>)handleAudioPrepare:(FBRouteRequest *)request
+{
+  XCUIApplication *app = [[XCUIApplication alloc]
+                          initWithBundleIdentifier:FBGadsIntegrationAppBundleIdentifier];
+  app.launchArguments = @[FBGadsAudioPickerLaunchArgument];
+  // Activating WDA-style waits for idle, which can be very long. Match the
+  // pattern in handleAppActivateNoSession: zero out the timeout, launch, restore.
+  NSTimeInterval previousTimeout = FBConfiguration.waitForIdleTimeout;
+  FBConfiguration.waitForIdleTimeout = 0;
+  [app launch];
+  FBConfiguration.waitForIdleTimeout = previousTimeout;
+
+  // Last-mile autotap: after IntegrationApp's picker fires `buttonPressed:`,
+  // iOS 26 presents a system sheet shaped as a radio-button list — one row per
+  // app with a broadcast extension — plus a single action button "Iniciar
+  // Gravação" at the top. iOS decides broadcast (recordingType=1, spawns appex)
+  // vs local systemRecording (recordingType=2, .mov in Photos) based on which
+  // radio is selected when the action button is tapped. `preferredExtension`
+  // is only a visual hint; iOS keeps the last-used radio selected (typically
+  // Photos), so we MUST tap the WebDriverAgentBroadcast row first and only
+  // then tap the action button. Older iOS / some locales expose a separate
+  // "Iniciar Transmissão" / "Start Broadcast" button — handled as Path A.
+  NSLog(@"[GADSAudio] scheduling system-sheet autotap");
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSLog(@"[GADSAudio] autotap entered");
+
+    XCUIApplication *springboard = [[XCUIApplication alloc] initWithBundleIdentifier:@"com.apple.springboard"];
+
+    // Localized button labels.
+    // - broadcastLabels  : direct "start broadcast" buttons exposed by older iOS / some locales.
+    // - actionButtonLabels: every label the picker's primary action button may carry,
+    //   including BOTH start variants (when broadcast is inactive) and stop variants
+    //   (when broadcast is already active and persisted across sessions). Used to detect
+    //   that the picker is open (Phase 1 Path B prep) and to tap the action button in
+    //   Phase 2 — the safety gate prevents tapping a stop variant by mistake.
+    // - stopLabels       : stop-only subset of actionButtonLabels, used by Phase 1.5 to
+    //   detect "broadcast already active" and skip autotap entirely.
+    NSArray<NSString *> *broadcastLabels = @[
+      @"Iniciar Transmissão",
+      @"Iniciar Difusão",
+      @"Start Broadcast",
+      @"Iniciar transmisión",
+      @"Démarrer la diffusion",
+      @"Übertragung starten",
+    ];
+    NSArray<NSString *> *stopLabels = @[
+      @"Parar Gravação",
+      @"Stop Recording",
+      @"Parar Transmissão",
+      @"Parar Difusão",
+      @"Stop Broadcast",
+      @"Parar grabación",
+      @"Arrêter l'enregistrement",
+      @"Aufnahme stoppen",
+    ];
+    NSArray<NSString *> *actionButtonLabels = @[
+      // Start (broadcast inactive — normal flow)
+      @"Iniciar Gravação",
+      @"Start Recording",
+      @"Iniciar Transmissão",
+      @"Iniciar Difusão",
+      @"Start Broadcast",
+      @"Iniciar grabación",
+      @"Démarrer l'enregistrement",
+      @"Aufnahme starten",
+      // Stop (broadcast active — already broadcasting)
+      @"Parar Gravação",
+      @"Stop Recording",
+      @"Parar Transmissão",
+      @"Parar Difusão",
+      @"Stop Broadcast",
+      @"Parar grabación",
+      @"Arrêter l'enregistrement",
+      @"Aufnahme stoppen",
+    ];
+    NSPredicate *broadcastPredicate = [NSPredicate predicateWithFormat:@"label IN %@", broadcastLabels];
+    NSPredicate *stopPredicate = [NSPredicate predicateWithFormat:@"label IN %@", stopLabels];
+    NSPredicate *actionPredicate = [NSPredicate predicateWithFormat:@"label IN %@", actionButtonLabels];
+    NSPredicate *targetMatch = [NSPredicate predicateWithFormat:@"label == %@", @"WebDriverAgentBroadcast"];
+
+    NSUInteger maxAttempts = 3;
+    XCUIElement *recordBtn = nil;
+
+    // Phase 1 — locate an entry point. On each attempt: try Path A (direct
+    // broadcast button) first; if absent, look for the record button so we
+    // can long-press it (Path B). Retry up to maxAttempts to absorb the sheet
+    // animation latency.
+    for (NSUInteger attempt = 1; attempt <= maxAttempts; attempt++) {
+      // Path A — explicit broadcast button. Multi-type search: buttons, then any.
+      XCUIElement *broadcastBtn = [[springboard.buttons matchingPredicate:broadcastPredicate] firstMatch];
+      NSString *broadcastFoundIn = broadcastBtn.exists ? @"button" : nil;
+      if (!broadcastBtn.exists) {
+        XCUIElement *anyBcast = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:broadcastPredicate] firstMatch];
+        if (anyBcast.exists) { broadcastBtn = anyBcast; broadcastFoundIn = @"any"; }
+      }
+      if (broadcastBtn.exists && broadcastBtn.isHittable) {
+        // Round 12 gate: a hittable broadcast-mode action button only proves
+        // SOME broadcast extension is currently selected -- not necessarily
+        // WebDriverAgentBroadcast. Confirm that WDAB specifically is selected
+        // before tapping; otherwise fall through to the Phase 2 swipe loop so
+        // we can change the radio first. Use exact-match value strings only
+        // ("1" / "Selected" / "Selecionado") to avoid Round 11 false positives
+        // from substring matching ("select" / "Selecion" matched too eagerly).
+        XCUIElement *wdabCheck = [[springboard.buttons matchingPredicate:targetMatch] firstMatch];
+        if (!wdabCheck.exists) {
+          XCUIElement *wdabAny = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:targetMatch] firstMatch];
+          if (wdabAny.exists) { wdabCheck = wdabAny; }
+        }
+        BOOL wdabIsSelected = NO;
+        if (wdabCheck.exists) {
+          wdabIsSelected = [wdabCheck isSelected];
+          if (!wdabIsSelected) {
+            NSString *valStr = [NSString stringWithFormat:@"%@", wdabCheck.value ?: @""];
+            if ([valStr isEqualToString:@"1"] || [valStr isEqualToString:@"Selected"] || [valStr isEqualToString:@"Selecionado"]) {
+              wdabIsSelected = YES;
+            }
+          }
+        }
+        if (wdabIsSelected) {
+          NSLog(@"[GADSAudio] Path A: WDAB selected; tapping action button '%@'", broadcastBtn.label);
+          [broadcastBtn tap];
+          [NSThread sleepForTimeInterval:1.5];
+          [[XCUIDevice sharedDevice] pressButton:XCUIDeviceButtonHome];
+          NSLog(@"[GADSAudio] pressed Home");
+          return;
+        }
+
+        NSLog(@"[GADSAudio] Path A: WDAB not selected; falling through to Phase 2 swipe");
+        // do not return; proceed to Path B prep below so we can swipe.
+      }
+
+      // Path B prep — locate record button. Multi-type search: buttons, then any.
+      XCUIElement *foundRecord = [[springboard.buttons matchingPredicate:actionPredicate] firstMatch];
+      if (!foundRecord.exists) {
+        XCUIElement *anyRec = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:actionPredicate] firstMatch];
+        if (anyRec.exists) { foundRecord = anyRec; }
+      }
+      if (foundRecord.exists && foundRecord.isHittable) {
+        recordBtn = foundRecord;
+        break;
+      }
+
+      [NSThread sleepForTimeInterval:0.6];
+    }
+
+    if (!(recordBtn.exists && recordBtn.isHittable)) {
+      NSLog(@"[GADSAudio] ABORT: no broadcast button and no record button found after %lu attempts", (unsigned long)maxAttempts);
+      return;
+    }
+
+    // Phase 1.5 — detect already-broadcasting state. iOS 26 persists the
+    // broadcast across sessions: when the picker re-opens with WDAB still
+    // active, the action button is "Parar Transmissão" / "Stop Broadcast"
+    // instead of "Iniciar Gravação". In that case the swipe + tap dance is
+    // unnecessary (and would TOGGLE OFF the broadcast). Just press Home to
+    // dismiss the picker, leaving the in-progress broadcast running.
+    XCUIElement *stopBtn = [[springboard.buttons matchingPredicate:stopPredicate] firstMatch];
+    if (!stopBtn.exists) {
+      XCUIElement *anyStop = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:stopPredicate] firstMatch];
+      if (anyStop.exists) { stopBtn = anyStop; }
+    }
+    if (stopBtn.exists && stopBtn.isHittable) {
+      NSLog(@"[GADSAudio] broadcast already active (action button = '%@'). Pressing Home to dismiss picker without changes.", stopBtn.label);
+      [[XCUIDevice sharedDevice] pressButton:XCUIDeviceButtonHome];
+      return;
+    }
+
+    // Phase 2 — iOS 26 broadcast picker is a HORIZONTAL CAROUSEL of radio
+    // options. Each swipeLeft advances the radio selection by one position
+    // (Fotos -> ChatGPT -> Facebook -> ... -> WebDriverAgentBroadcast -> ...).
+    // The row's frame stays at its logical Y in the tree on every swipe; what
+    // changes is `isHittable`, which flips to 1 ONLY when WebDriverAgentBroadcast
+    // is the currently-selected radio. We swipe up to maxHorizontalSwipes times,
+    // re-querying after each swipe, until extBtn.isHittable=1 — then tap to
+    // confirm and tap the action button.
+    //
+    // DO NOT regress to: pressForDuration (long-press triggers systemRecording),
+    // coordinateWithOffset / coordinateWithNormalizedOffset (dismisses the modal
+    // scrim), swipeUp (vertical swipe is a no-op on this UI). The R3-R9 history
+    // is in commit messages. (`targetMatch` is defined at the top of this block.)
+    XCUIElement *extBtn = [[springboard.buttons matchingPredicate:targetMatch] firstMatch];
+    if (!extBtn.exists) {
+      XCUIElement *anyExt = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:targetMatch] firstMatch];
+      if (anyExt.exists) { extBtn = anyExt; }
+    }
+    if (!extBtn.exists) {
+      NSLog(@"[GADSAudio] ABORT: WebDriverAgentBroadcast not found in tree");
+      return;
+    }
+
+    // Pick a swipe target. Prefer the pager indicator (canonical anchor for
+    // paging the carousel), fall back to the Fotos row (page 1 anchor), then
+    // to springboard itself.
+    XCUIElement *swipeTarget = nil;
+    NSPredicate *pagerMatch = [NSPredicate predicateWithFormat:@"label CONTAINS[c] %@ OR label CONTAINS[c] %@", @"Barra de rolagem horizontal", @"horizontal scroll"];
+    XCUIElement *pager = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:pagerMatch] firstMatch];
+    if (pager.exists) {
+      swipeTarget = pager;
+    } else {
+      XCUIElement *fotosBtn = [[springboard.buttons matchingIdentifier:@"Fotos"] firstMatch];
+      if (!fotosBtn.exists) {
+        fotosBtn = [[springboard.buttons matchingPredicate:[NSPredicate predicateWithFormat:@"label == %@", @"Fotos"]] firstMatch];
+      }
+      swipeTarget = fotosBtn.exists ? fotosBtn : springboard;
+    }
+
+    // Each swipe advances radio by 1; ~7 swipes are needed to reach
+    // WebDriverAgentBroadcast on the current iPhone. 10 gives headroom in case
+    // new broadcast extensions appear or the alphabetical order shifts.
+    NSUInteger maxHorizontalSwipes = 10;
+    NSUInteger horizSwipe = 0;
+    while (!extBtn.isHittable && horizSwipe < maxHorizontalSwipes) {
+      horizSwipe++;
+      [swipeTarget swipeLeft];
+      [NSThread sleepForTimeInterval:0.4];
+      extBtn = [[springboard.buttons matchingPredicate:targetMatch] firstMatch];
+      if (!extBtn.exists) {
+        XCUIElement *anyAfter = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:targetMatch] firstMatch];
+        if (anyAfter.exists) { extBtn = anyAfter; }
+      }
+    }
+
+    if (!extBtn.exists || !extBtn.isHittable) {
+      NSLog(@"[GADSAudio] ABORT: WebDriverAgentBroadcast never became hittable after %lu horizontal swipes",
+            (unsigned long)horizSwipe);
+      return;
+    }
+
+    NSLog(@"[GADSAudio] tapping WebDriverAgentBroadcast (selected after %lu swipes)", (unsigned long)horizSwipe);
+    [extBtn tap];
+    [NSThread sleepForTimeInterval:0.5];
+
+    XCUIElement *extBtnAfter = [[springboard.buttons matchingPredicate:targetMatch] firstMatch];
+    if (!extBtnAfter.exists) {
+      XCUIElement *anyAfter = [[[springboard descendantsMatchingType:XCUIElementTypeAny] matchingPredicate:targetMatch] firstMatch];
+      if (anyAfter.exists) { extBtnAfter = anyAfter; }
+    }
+
+    // Safety gate (Round 11): never tap the action button unless the post-tap
+    // accessibility state confirms WebDriverAgentBroadcast is the selected
+    // radio. Tapping with the wrong radio (e.g. Facebook still selected) spawns
+    // the wrong broadcast extension and breaks the entire E2E pipeline. This
+    // gate trades coverage for safety — false negatives just delay broadcast
+    // start, false positives broadcast through the wrong app.
+    BOOL isWdabSelected = [extBtnAfter isSelected];
+    if (!isWdabSelected) {
+      // XCUIElement.isSelected sometimes returns NO even when the checkmark is
+      // visible. Cross-check accessibilityValue: iOS exposes radio state as
+      // "1" / "Selecionado" / "Selected" depending on locale.
+      NSString *valStr = [NSString stringWithFormat:@"%@", extBtnAfter.value ?: @""];
+      // Exact-match only -- substring matching ("select" / "Selecion") was
+      // too eager in Round 11 and could pass on labels like "Not selected".
+      if ([valStr isEqualToString:@"1"] || [valStr isEqualToString:@"Selected"] || [valStr isEqualToString:@"Selecionado"]) {
+        isWdabSelected = YES;
+      }
+    }
+
+    if (!isWdabSelected) {
+      NSLog(@"[GADSAudio] ABORT: WebDriverAgentBroadcast tap did not register as radio selection (isSelected=%d value=%@); not tapping action to avoid wrong-extension broadcast",
+            [extBtnAfter isSelected], extBtnAfter.value);
+      return;
+    }
+
+    XCUIElement *finalAction = [[springboard.buttons matchingPredicate:actionPredicate] firstMatch];
+    if (finalAction.exists && finalAction.isHittable) {
+      NSLog(@"[GADSAudio] tapping action button '%@'", finalAction.label);
+      [finalAction tap];
+      [NSThread sleepForTimeInterval:1.5];
+      [[XCUIDevice sharedDevice] pressButton:XCUIDeviceButtonHome];
+      NSLog(@"[GADSAudio] pressed Home");
+    } else {
+      NSLog(@"[GADSAudio] ABORT: action button not hittable after extension selection");
+    }
+  });
+
+  return FBResponseWithOK();
 }
 
 /**

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -41,6 +41,7 @@
 		315A15012518CB8700A3A064 /* TouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15002518CB8700A3A064 /* TouchableView.m */; };
 		315A15072518CC2800A3A064 /* TouchSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15062518CC2800A3A064 /* TouchSpotView.m */; };
 		315A150A2518D6F400A3A064 /* TouchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 315A15092518D6F400A3A064 /* TouchViewController.m */; };
+		3DCF5E2FE3C26A7E714C3AD5 /* FBAudioBroadcastRelay.h in Headers */ = {isa = PBXBuildFile; fileRef = 7B923DC6DFB872E039124A64 /* FBAudioBroadcastRelay.h */; };
 		6385F4A7220A40760095BBDB /* XCUIApplicationProcessDelay.m in Sources */ = {isa = PBXBuildFile; fileRef = 6385F4A5220A40760095BBDB /* XCUIApplicationProcessDelay.m */; };
 		63CCF91221ECE4C700E94ABD /* FBImageProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CCF91021ECE4C700E94ABD /* FBImageProcessor.h */; };
 		63CCF91321ECE4C700E94ABD /* FBImageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CCF91121ECE4C700E94ABD /* FBImageProcessor.m */; };
@@ -543,6 +544,8 @@
 		ADBC39981D07842800327304 /* XCUIElementDouble.m in Sources */ = {isa = PBXBuildFile; fileRef = ADBC39971D07842800327304 /* XCUIElementDouble.m */; };
 		ADDA07241D6BB2BF001700AC /* FBScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ADDA07231D6BB2BF001700AC /* FBScrollViewController.m */; };
 		ADEF63AF1D09DEBE0070A7E3 /* FBRuntimeUtilsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = ADEF63AE1D09DEBE0070A7E3 /* FBRuntimeUtilsTests.m */; };
+		B00E550B2F9FFB5700C1A6AA /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B00E550A2F9FFB5600C1A6AA /* ReplayKit.framework */; };
+		B00E55122F9FFB5700C1A6AA /* WebDriverAgentBroadcast.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B00E55092F9FFB5600C1A6AA /* WebDriverAgentBroadcast.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		B316351C2DDF0CF5007D9317 /* FBAccessibilityTraits.m in Sources */ = {isa = PBXBuildFile; fileRef = B316351B2DDF0CF5007D9317 /* FBAccessibilityTraits.m */; };
 		B316351D2DDF0CF5007D9317 /* FBAccessibilityTraits.m in Sources */ = {isa = PBXBuildFile; fileRef = B316351B2DDF0CF5007D9317 /* FBAccessibilityTraits.m */; };
 		B316351F2DDF0D0B007D9317 /* FBAccessibilityTraits.h in Headers */ = {isa = PBXBuildFile; fileRef = B316351E2DDF0D0B007D9317 /* FBAccessibilityTraits.h */; };
@@ -821,6 +824,7 @@
 		EEE3764A1D59FAE900ED88DD /* XCUIElement+FBWebDriverAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE376481D59FAE900ED88DD /* XCUIElement+FBWebDriverAttributes.m */; };
 		EEE9B4721CD02B88009D2030 /* FBRunLoopSpinner.h in Headers */ = {isa = PBXBuildFile; fileRef = EEE9B4701CD02B88009D2030 /* FBRunLoopSpinner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEE9B4731CD02B88009D2030 /* FBRunLoopSpinner.m in Sources */ = {isa = PBXBuildFile; fileRef = EEE9B4711CD02B88009D2030 /* FBRunLoopSpinner.m */; };
+		FE03A8776BF22BC666125F1C /* FBAudioBroadcastRelay.m in Sources */ = {isa = PBXBuildFile; fileRef = D67C0BCCBBCF27D3E33F4802 /* FBAudioBroadcastRelay.m */; };
 		FF384A922E7B160600C6CF03 /* FBGadsCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = FF384A912E7B15FC00C6CF03 /* FBGadsCommands.h */; };
 		FF384A932E7B160600C6CF03 /* FBGadsCommands.h in Headers */ = {isa = PBXBuildFile; fileRef = FF384A912E7B15FC00C6CF03 /* FBGadsCommands.h */; };
 		FF384A952E7B161000C6CF03 /* FBGadsCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = FF384A942E7B160C00C6CF03 /* FBGadsCommands.m */; };
@@ -837,6 +841,15 @@
 		FF384AA52E7E82C400C6CF03 /* FBImageProcessorGads.h in Headers */ = {isa = PBXBuildFile; fileRef = FF384AA32E7E82C000C6CF03 /* FBImageProcessorGads.h */; };
 		FF384AA72E7E82CB00C6CF03 /* FBImageProcessorGads.m in Sources */ = {isa = PBXBuildFile; fileRef = FF384AA62E7E82C700C6CF03 /* FBImageProcessorGads.m */; };
 		FF384AA82E7E82CB00C6CF03 /* FBImageProcessorGads.m in Sources */ = {isa = PBXBuildFile; fileRef = FF384AA62E7E82C700C6CF03 /* FBImageProcessorGads.m */; };
+		FFAA000100010000000000A1 /* FBAudioBroadcastReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000A0 /* FBAudioBroadcastReceiver.h */; };
+		FFAA000100010000000000A2 /* FBAudioBroadcastReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000A0 /* FBAudioBroadcastReceiver.h */; };
+		FFAA000100010000000000A4 /* FBAudioBroadcastReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000A3 /* FBAudioBroadcastReceiver.m */; };
+		FFAA000100010000000000A5 /* FBAudioBroadcastReceiver.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000A3 /* FBAudioBroadcastReceiver.m */; };
+		FFAA000100010000000000B1 /* FBAudioWebSocketClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000B0 /* FBAudioWebSocketClient.h */; };
+		FFAA000100010000000000B2 /* FBAudioWebSocketClient.h in Headers */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000B0 /* FBAudioWebSocketClient.h */; };
+		FFAA000100010000000000B4 /* FBAudioWebSocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000B3 /* FBAudioWebSocketClient.m */; };
+		FFAA000100010000000000B5 /* FBAudioWebSocketClient.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAA000100010000000000B3 /* FBAudioWebSocketClient.m */; };
+		FFAA000200010000000000C4 /* FBAudioBroadcastPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FFAA000200010000000000C3 /* FBAudioBroadcastPickerViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -860,6 +873,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = EE158A981CBD452B00A3E3F0;
 			remoteInfo = WebDriverAgentLib;
+		};
+		B00E55102F9FFB5700C1A6AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 91F9DAE11B99DBC2001349B2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B00E55082F9FFB5600C1A6AA;
+			remoteInfo = WebDriverAgentBroadcast;
 		};
 		EE158B5B1CBD462500A3E3F0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -922,6 +942,17 @@
 				641EE6FD2240C61D00173FCB /* WebDriverAgentLib_tvOS.framework in Copy frameworks */,
 			);
 			name = "Copy frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00E55132F9FFB5700C1A6AA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B00E55122F9FFB5700C1A6AA /* WebDriverAgentBroadcast.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		EE93CFF41CCA501300708122 /* Copy frameworks */ = {
@@ -1125,6 +1156,7 @@
 		71F5BE33252E5B2200EE9EBA /* FBElementSwipingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBElementSwipingTests.m; sourceTree = "<group>"; };
 		71F5BE4D252F14EB00EE9EBA /* FBExceptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBExceptions.h; sourceTree = "<group>"; };
 		71F5BE4E252F14EB00EE9EBA /* FBExceptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBExceptions.m; sourceTree = "<group>"; };
+		7B923DC6DFB872E039124A64 /* FBAudioBroadcastRelay.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = FBAudioBroadcastRelay.h; sourceTree = "<group>"; };
 		AD42DD2A1CF121E600806E5D /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		AD6C26921CF2379700F8B5FF /* FBAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBAlert.h; path = WebDriverAgentLib/FBAlert.h; sourceTree = SOURCE_ROOT; };
 		AD6C26931CF2379700F8B5FF /* FBAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBAlert.m; path = WebDriverAgentLib/FBAlert.m; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -1141,11 +1173,14 @@
 		ADDA07221D6BB2BF001700AC /* FBScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBScrollViewController.h; sourceTree = "<group>"; };
 		ADDA07231D6BB2BF001700AC /* FBScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBScrollViewController.m; sourceTree = "<group>"; };
 		ADEF63AE1D09DEBE0070A7E3 /* FBRuntimeUtilsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBRuntimeUtilsTests.m; sourceTree = "<group>"; };
+		B00E55092F9FFB5600C1A6AA /* WebDriverAgentBroadcast.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WebDriverAgentBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B00E550A2F9FFB5600C1A6AA /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
 		B316351B2DDF0CF5007D9317 /* FBAccessibilityTraits.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAccessibilityTraits.m; sourceTree = "<group>"; };
 		B316351E2DDF0D0B007D9317 /* FBAccessibilityTraits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAccessibilityTraits.h; sourceTree = "<group>"; };
 		C8FB547322D3949C00B69954 /* LSApplicationWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSApplicationWorkspace.h; sourceTree = "<group>"; };
 		C8FB547722D4C1FC00B69954 /* FBUnattachedAppLauncher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBUnattachedAppLauncher.h; sourceTree = "<group>"; };
 		C8FB547822D4C1FC00B69954 /* FBUnattachedAppLauncher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBUnattachedAppLauncher.m; sourceTree = "<group>"; };
+		D67C0BCCBBCF27D3E33F4802 /* FBAudioBroadcastRelay.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = FBAudioBroadcastRelay.m; sourceTree = "<group>"; };
 		E444DC59249131880060D7EB /* HTTPErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPErrorResponse.h; path = WebDriverAgentLib/Vendor/CocoaHTTPServer/Responses/HTTPErrorResponse.h; sourceTree = SOURCE_ROOT; };
 		E444DC5B249131880060D7EB /* HTTPDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HTTPDataResponse.m; path = WebDriverAgentLib/Vendor/CocoaHTTPServer/Responses/HTTPDataResponse.m; sourceTree = SOURCE_ROOT; };
 		E444DC60249131890060D7EB /* HTTPDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPDataResponse.h; path = WebDriverAgentLib/Vendor/CocoaHTTPServer/Responses/HTTPDataResponse.h; sourceTree = SOURCE_ROOT; };
@@ -1425,7 +1460,38 @@
 		FF384AA02E7E7C6700C6CF03 /* FBMjpegServerGads.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBMjpegServerGads.m; sourceTree = "<group>"; };
 		FF384AA32E7E82C000C6CF03 /* FBImageProcessorGads.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBImageProcessorGads.h; sourceTree = "<group>"; };
 		FF384AA62E7E82C700C6CF03 /* FBImageProcessorGads.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBImageProcessorGads.m; sourceTree = "<group>"; };
+		FFAA000100010000000000A0 /* FBAudioBroadcastReceiver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAudioBroadcastReceiver.h; sourceTree = "<group>"; };
+		FFAA000100010000000000A3 /* FBAudioBroadcastReceiver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAudioBroadcastReceiver.m; sourceTree = "<group>"; };
+		FFAA000100010000000000B0 /* FBAudioWebSocketClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAudioWebSocketClient.h; sourceTree = "<group>"; };
+		FFAA000100010000000000B3 /* FBAudioWebSocketClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAudioWebSocketClient.m; sourceTree = "<group>"; };
+		FFAA000200010000000000C0 /* FBAudioBroadcastPickerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBAudioBroadcastPickerViewController.h; sourceTree = "<group>"; };
+		FFAA000200010000000000C3 /* FBAudioBroadcastPickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAudioBroadcastPickerViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B00E55162F9FFB5700C1A6AA /* Exceptions for "WebDriverAgentBroadcast" folder in "WebDriverAgentBroadcast" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B00E55082F9FFB5600C1A6AA /* WebDriverAgentBroadcast */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B00E550C2F9FFB5700C1A6AA /* WebDriverAgentBroadcast */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B00E55162F9FFB5700C1A6AA /* Exceptions for "WebDriverAgentBroadcast" folder in "WebDriverAgentBroadcast" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = WebDriverAgentBroadcast;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		641EE2D72240BBE300173FCB /* Frameworks */ = {
@@ -1451,6 +1517,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				64B264FE228C50E0002A5025 /* WebDriverAgentLib_tvOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00E55062F9FFB5600C1A6AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B00E550B2F9FFB5700C1A6AA /* ReplayKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1624,6 +1698,7 @@
 				EE9B75F91CF7964100275851 /* WebDriverAgentTests */,
 				EEF988341C486655005CA669 /* WebDriverAgentRunner */,
 				EE9AB8021CAEE182008C271F /* Scripts */,
+				B00E550C2F9FFB5700C1A6AA /* WebDriverAgentBroadcast */,
 				91F9DAEA1B99DBC2001349B2 /* Products */,
 				B6E83A410C45944B036B6B0F /* Frameworks */,
 				AD42DD291CF121E600806E5D /* Modules */,
@@ -1646,6 +1721,7 @@
 				641EE2DA2240BBE300173FCB /* WebDriverAgentRunner_tvOS.xctest */,
 				641EE6F82240C5CA00173FCB /* WebDriverAgentLib_tvOS.framework */,
 				64B264F9228C50E0002A5025 /* UnitTests_tvOS.xctest */,
+				B00E55092F9FFB5600C1A6AA /* WebDriverAgentBroadcast.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1688,6 +1764,7 @@
 			children = (
 				716C9341224D5369004B8542 /* iOS */,
 				716C9340224D5358004B8542 /* tvOS */,
+				B00E550A2F9FFB5600C1A6AA /* ReplayKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1949,6 +2026,10 @@
 				FF384AA32E7E82C000C6CF03 /* FBImageProcessorGads.h */,
 				FF384AA02E7E7C6700C6CF03 /* FBMjpegServerGads.m */,
 				FF384A9D2E7E7C5F00C6CF03 /* FBMjpegServerGads.h */,
+				FFAA000100010000000000A3 /* FBAudioBroadcastReceiver.m */,
+				FFAA000100010000000000A0 /* FBAudioBroadcastReceiver.h */,
+				FFAA000100010000000000B3 /* FBAudioWebSocketClient.m */,
+				FFAA000100010000000000B0 /* FBAudioWebSocketClient.h */,
 				71414ECF2670A1ED003A8C5D /* LRUCache */,
 				13815F6D2328D20400CDAB61 /* FBActiveAppDetectionPoint.h */,
 				13815F6E2328D20400CDAB61 /* FBActiveAppDetectionPoint.m */,
@@ -2027,6 +2108,8 @@
 				6385F4A5220A40760095BBDB /* XCUIApplicationProcessDelay.m */,
 				B316351B2DDF0CF5007D9317 /* FBAccessibilityTraits.m */,
 				B316351E2DDF0D0B007D9317 /* FBAccessibilityTraits.h */,
+				7B923DC6DFB872E039124A64 /* FBAudioBroadcastRelay.h */,
+				D67C0BCCBBCF27D3E33F4802 /* FBAudioBroadcastRelay.m */,
 			);
 			name = Utilities;
 			path = WebDriverAgentLib/Utilities;
@@ -2139,6 +2222,8 @@
 			children = (
 				EE9B76821CF7997600275851 /* AppDelegate.h */,
 				EE9B76831CF7997600275851 /* AppDelegate.m */,
+				FFAA000200010000000000C0 /* FBAudioBroadcastPickerViewController.h */,
+				FFAA000200010000000000C3 /* FBAudioBroadcastPickerViewController.m */,
 				EE1E06E51D182E95007CF043 /* FBAlertViewController.h */,
 				EE1E06E61D182E95007CF043 /* FBAlertViewController.m */,
 				EE8BA9781DCCED9A00A9DEF8 /* FBNavigationController.h */,
@@ -2382,6 +2467,8 @@
 				641EE65A2240C5CA00173FCB /* FBXCTestDaemonsProxy.h in Headers */,
 				641EE65B2240C5CA00173FCB /* XCUIElementHitPointCoordinate.h in Headers */,
 				FF384A9F2E7E7C6300C6CF03 /* FBMjpegServerGads.h in Headers */,
+				FFAA000100010000000000A2 /* FBAudioBroadcastReceiver.h in Headers */,
+				FFAA000100010000000000B2 /* FBAudioWebSocketClient.h in Headers */,
 				641EE65C2240C5CA00173FCB /* XCTDarwinNotificationExpectation.h in Headers */,
 				641EE65D2240C5CA00173FCB /* XCTRunnerAutomationSession.h in Headers */,
 				641EE65F2240C5CA00173FCB /* XCSourceCodeTreeNodeEnumerator.h in Headers */,
@@ -2742,6 +2829,8 @@
 				EE35AD731E3B77D600A02D78 /* XCUIElementQuery.h in Headers */,
 				EE35AD331E3B77D600A02D78 /* XCPointerEvent.h in Headers */,
 				FF384A9E2E7E7C6300C6CF03 /* FBMjpegServerGads.h in Headers */,
+				FFAA000100010000000000A1 /* FBAudioBroadcastReceiver.h in Headers */,
+				FFAA000100010000000000B1 /* FBAudioWebSocketClient.h in Headers */,
 				EE35AD351E3B77D600A02D78 /* XCSourceCodeRecording.h in Headers */,
 				71D04DC825356C43008A052C /* XCUIElement+FBCaching.h in Headers */,
 				71BB58E12B9631F100CB9BFE /* FBScreenRecordingPromise.h in Headers */,
@@ -2811,6 +2900,7 @@
 				EE35AD091E3B77D600A02D78 /* _XCInternalTestRun.h in Headers */,
 				712A0C871DA3E55D007D02E5 /* FBXPath-Private.h in Headers */,
 				EE35AD321E3B77D600A02D78 /* XCKeyMappingPath.h in Headers */,
+				3DCF5E2FE3C26A7E714C3AD5 /* FBAudioBroadcastRelay.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2871,6 +2961,26 @@
 			productName = WebDriverAgentLib_tvOSTests;
 			productReference = 64B264F9228C50E0002A5025 /* UnitTests_tvOS.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B00E55082F9FFB5600C1A6AA /* WebDriverAgentBroadcast */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B00E55172F9FFB5700C1A6AA /* Build configuration list for PBXNativeTarget "WebDriverAgentBroadcast" */;
+			buildPhases = (
+				B00E55052F9FFB5600C1A6AA /* Sources */,
+				B00E55062F9FFB5600C1A6AA /* Frameworks */,
+				B00E55072F9FFB5600C1A6AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B00E550C2F9FFB5700C1A6AA /* WebDriverAgentBroadcast */,
+			);
+			name = WebDriverAgentBroadcast;
+			productName = WebDriverAgentBroadcast;
+			productReference = B00E55092F9FFB5600C1A6AA /* WebDriverAgentBroadcast.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		EE158A981CBD452B00A3E3F0 /* WebDriverAgentLib */ = {
 			isa = PBXNativeTarget;
@@ -2953,10 +3063,12 @@
 				EE9B75D01CF7956C00275851 /* Sources */,
 				EE9B75D11CF7956C00275851 /* Frameworks */,
 				EE9B75D21CF7956C00275851 /* Resources */,
+				B00E55132F9FFB5700C1A6AA /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B00E55112F9FFB5700C1A6AA /* PBXTargetDependency */,
 			);
 			name = IntegrationApp;
 			productName = Eval;
@@ -3007,7 +3119,7 @@
 		91F9DAE11B99DBC2001349B2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 2610;
 				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
@@ -3019,6 +3131,9 @@
 					};
 					64B264F8228C50E0002A5025 = {
 						CreatedOnToolsVersion = 10.2.1;
+					};
+					B00E55082F9FFB5600C1A6AA = {
+						CreatedOnToolsVersion = 26.1.1;
 					};
 					EE158A981CBD452B00A3E3F0 = {
 						CreatedOnToolsVersion = 7.3;
@@ -3061,6 +3176,7 @@
 				EE5095DD1EBCC9090028E2FE /* IntegrationTests_2 */,
 				EE2202031ECC612200A29571 /* IntegrationTests_3 */,
 				EE9B75D31CF7956C00275851 /* IntegrationApp */,
+				B00E55082F9FFB5600C1A6AA /* WebDriverAgentBroadcast */,
 			);
 		};
 /* End PBXProject section */
@@ -3081,6 +3197,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		64B264F7228C50E0002A5025 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00E55072F9FFB5600C1A6AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3265,6 +3388,8 @@
 				716C9DFD27315D21005AD475 /* FBReflectionUtils.m in Sources */,
 				641EE61D2240C5CA00173FCB /* FBElementCommands.m in Sources */,
 				FF384AA12E7E7C6B00C6CF03 /* FBMjpegServerGads.m in Sources */,
+				FFAA000100010000000000A5 /* FBAudioBroadcastReceiver.m in Sources */,
+				FFAA000100010000000000B5 /* FBAudioWebSocketClient.m in Sources */,
 				641EE61E2240C5CA00173FCB /* FBExceptionHandler.m in Sources */,
 				71BB58F22B96511800CB9BFE /* FBVideoCommands.m in Sources */,
 				641EE61F2240C5CA00173FCB /* FBXCodeCompatibility.m in Sources */,
@@ -3286,6 +3411,13 @@
 			files = (
 				64B26508228C5514002A5025 /* XCUIElementDouble.m in Sources */,
 				64B26504228C5299002A5025 /* FBTVNavigationTrackerTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B00E55052F9FFB5600C1A6AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3415,10 +3547,13 @@
 				71D3B3D7267FC7260076473D /* XCUIElement+FBResolve.m in Sources */,
 				715AFAC21FFA29180053896D /* FBScreen.m in Sources */,
 				FF384AA22E7E7C6B00C6CF03 /* FBMjpegServerGads.m in Sources */,
+				FFAA000100010000000000A4 /* FBAudioBroadcastReceiver.m in Sources */,
+				FFAA000100010000000000B4 /* FBAudioWebSocketClient.m in Sources */,
 				71B155DC230711E900646AFB /* FBCommandStatus.m in Sources */,
 				EE35AD7C1E3B80C000A02D78 /* FBXCTestDaemonsProxy.m in Sources */,
 				EE18883B1DA661C400307AA8 /* FBMathUtils.m in Sources */,
 				7157B292221DADD2001C348C /* FBXCAXClientProxy.m in Sources */,
+				FE03A8776BF22BC666125F1C /* FBAudioBroadcastRelay.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3501,6 +3636,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE9B768E1CF7997600275851 /* AppDelegate.m in Sources */,
+				FFAA000200010000000000C4 /* FBAudioBroadcastPickerViewController.m in Sources */,
 				EE1E06E71D182E95007CF043 /* FBAlertViewController.m in Sources */,
 				315A15072518CC2800A3A064 /* TouchSpotView.m in Sources */,
 				EE9B76911CF7997600275851 /* main.m in Sources */,
@@ -3557,6 +3693,11 @@
 			isa = PBXTargetDependency;
 			target = EE158A981CBD452B00A3E3F0 /* WebDriverAgentLib */;
 			targetProxy = AD8D96F01D3C12960061268E /* PBXContainerItemProxy */;
+		};
+		B00E55112F9FFB5700C1A6AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B00E55082F9FFB5600C1A6AA /* WebDriverAgentBroadcast */;
+			targetProxy = B00E55102F9FFB5700C1A6AA /* PBXContainerItemProxy */;
 		};
 		EE158B5C1CBD462500A3E3F0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4049,14 +4190,103 @@
 			};
 			name = Release;
 		};
+		B00E55142F9FFB5700C1A6AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WebDriverAgentBroadcast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WebDriverAgentBroadcast;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Facebook. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.IntegrationApp.WebDriverAgentBroadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B00E55152F9FFB5700C1A6AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WebDriverAgentBroadcast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WebDriverAgentBroadcast;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Facebook. All rights reserved.";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.IntegrationApp.WebDriverAgentBroadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		EE158A9E1CBD452B00A3E3F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -4078,8 +4308,9 @@
 					/System/Developer/Library/Frameworks,
 				);
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentLib;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentLib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -4119,8 +4350,12 @@
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = NO;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -4143,8 +4378,9 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentLib;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentLib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -4260,6 +4496,7 @@
 			baseConfigurationReference = 71649EC82518C19C0087F212 /* IOSTestSettings.xcconfig */;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentTests/UnitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4267,7 +4504,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentCoreTests;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentCoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -4276,6 +4513,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 71649EC82518C19C0087F212 /* IOSTestSettings.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentTests/UnitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4284,7 +4522,7 @@
 					"@loader_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentCoreTests;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentCoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -4296,12 +4534,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				INFOPLIST_FILE = WebDriverAgentTests/IntegrationApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.IntegrationApp;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.IntegrationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -4312,13 +4551,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				INFOPLIST_FILE = WebDriverAgentTests/IntegrationApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.IntegrationApp;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.IntegrationApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -4366,8 +4606,9 @@
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = Z7FLMTR679;
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentRunner/Info.plist;
@@ -4384,7 +4625,7 @@
 					"$(inherited)",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentRunner;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USES_XCTRUNNER = YES;
 				WARNING_CFLAGS = (
@@ -4420,7 +4661,8 @@
 			baseConfigurationReference = EEE5CABF1C80361500CBBDD9 /* IOSSettings.xcconfig */;
 			buildSettings = {
 				CLANG_STATIC_ANALYZER_MODE = deep;
-				DEVELOPMENT_TEAM = Z7FLMTR679;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				DEVELOPMENT_TEAM = 52J68P5Y6M;
 				ENABLE_TESTING_SEARCH_PATHS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebDriverAgentRunner/Info.plist;
@@ -4438,7 +4680,7 @@
 					"$(inherited)",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.WebDriverAgentRunner;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.zeevo.WebDriverAgentRunner;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USES_XCTRUNNER = YES;
 				WARNING_CFLAGS = (
@@ -4504,6 +4746,15 @@
 			buildConfigurations = (
 				91F9DB0A1B99DBC2001349B2 /* Debug */,
 				91F9DB0B1B99DBC2001349B2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B00E55172F9FFB5700C1A6AA /* Build configuration list for PBXNativeTarget "WebDriverAgentBroadcast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B00E55142F9FFB5700C1A6AA /* Debug */,
+				B00E55152F9FFB5700C1A6AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

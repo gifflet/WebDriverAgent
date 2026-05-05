@@ -14,6 +14,9 @@
 #import "FBCommandHandler.h"
 #import "FBErrorBuilder.h"
 #import "FBExceptionHandler.h"
+#import "FBAudioBroadcastReceiver.h"
+#import "FBAudioBroadcastRelay.h"
+#import "FBAudioWebSocketClient.h"
 #import "FBMjpegServer.h"
 #import "FBMjpegServerGads.h"
 #import "FBRouteRequest.h"
@@ -43,11 +46,13 @@ static NSString *const FBServerURLEndMarker = @"<-ServerURLHere";
 @end
 
 
-@interface FBWebServer ()
+@interface FBWebServer () <FBAudioBroadcastReceiverDelegate>
 @property (nonatomic, strong) FBExceptionHandler *exceptionHandler;
 @property (nonatomic, strong) RoutingHTTPServer *server;
 @property (atomic, assign) BOOL keepAlive;
 @property (nonatomic, nullable) FBTCPSocket *screenshotsBroadcaster;
+@property (nonatomic, nullable) FBAudioBroadcastReceiver *audioBroadcastReceiver;
+@property (nonatomic, nullable) FBAudioBroadcastRelay *audioBroadcastRelay;
 @end
 
 @implementation FBWebServer
@@ -73,6 +78,7 @@ static NSString *const FBServerURLEndMarker = @"<-ServerURLHere";
   self.exceptionHandler = [FBExceptionHandler new];
   [self startHTTPServer];
   [self initScreenshotsBroadcasterGads];
+  [self initAudioBroadcastReceiverGads];
 
   self.keepAlive = YES;
   NSRunLoop *runLoop = [NSRunLoop mainRunLoop];
@@ -172,10 +178,55 @@ static NSString *const FBServerURLEndMarker = @"<-ServerURLHere";
   [self.screenshotsBroadcaster stop];
 }
 
+- (void)initAudioBroadcastReceiverGads
+{
+  uint16_t port = [FBAudioBroadcastReceiver resolvedIPCPort];
+  FBAudioBroadcastReceiver *receiver = [[FBAudioBroadcastReceiver alloc] initWithPort:port];
+  receiver.delegate = self;
+  NSError *error;
+  if (![receiver startListeningWithError:&error]) {
+    [FBLogger logFmt:@"Cannot init audio broadcast receiver on port %u: %@", port, error.description];
+    return;
+  }
+  self.audioBroadcastReceiver = receiver;
+
+  // The provider connects to the relay via go-ios USB forward (loopback only).
+  // This bypasses the iOS Local Network privacy block that prevents the
+  // xctrunner from making outbound LAN sockets.
+  uint16_t relayPort = [FBAudioBroadcastRelay resolvedRelayPort];
+  FBAudioBroadcastRelay *relay = [[FBAudioBroadcastRelay alloc] initWithPort:relayPort];
+  NSError *relayErr = nil;
+  if (![relay startListeningWithError:&relayErr]) {
+    [FBLogger logFmt:@"Cannot init audio broadcast relay on port %u: %@", relayPort, relayErr.description];
+    return;
+  }
+  self.audioBroadcastRelay = relay;
+}
+
+- (void)stopAudioBroadcastReceiverGads
+{
+  [self.audioBroadcastReceiver stop];
+  self.audioBroadcastReceiver = nil;
+  [self.audioBroadcastRelay stop];
+  self.audioBroadcastRelay = nil;
+}
+
+#pragma mark - FBAudioBroadcastReceiverDelegate
+
+- (void)audioReceiver:(FBAudioBroadcastReceiver *)receiver
+      didReceiveFrame:(NSData *)pcm
+                  pts:(uint64_t)pts
+{
+  // Forward to the on-device relay (loopback). Provider reads via go-ios USB
+  // forward — see provider/router/audio_extractor.go.
+  [self.audioBroadcastRelay relayFrame:pcm pts:pts];
+}
+
 - (void)stopServing
 {
   [FBSession.activeSession kill];
   [self stopScreenshotsBroadcasterGads];
+  [self stopAudioBroadcastReceiverGads];
   if (self.server.isRunning) {
     [self.server stop:NO];
   }
