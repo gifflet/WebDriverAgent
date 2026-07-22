@@ -67,6 +67,14 @@ const struct FBWDOrientationValues FBWDOrientationValues = {
     return FBResponseWithOK();
   }
 
+  // The interface did not rotate but XCUIDevice keeps the requested device
+  // orientation pending, which would kick in once an app that supports it
+  // comes to the foreground. Revert it to the effective interface orientation.
+  NSString *effectiveOrientation = [self.class interfaceOrientationForApplication:application];
+  NSNumber *effectiveValue = [[self _orientationsMapping] objectForKey:effectiveOrientation];
+  if (effectiveValue != nil) {
+    [XCUIDevice sharedDevice].orientation = (UIDeviceOrientation)effectiveValue.integerValue;
+  }
   return FBResponseWithUnknownErrorFormat(@"Unable To Rotate Device");
 }
 
@@ -139,7 +147,7 @@ const struct FBWDOrientationValues FBWDOrientationValues = {
   if (orientationValue == nil) {
     return NO;
   }
-  return [[XCUIDevice sharedDevice] fb_setDeviceInterfaceOrientation:orientationValue.integerValue];
+  return [[XCUIDevice sharedDevice] fb_setDeviceInterfaceOrientation:(UIDeviceOrientation)orientationValue.integerValue];
 }
 
 + (NSDictionary *)_orientationsMapping
