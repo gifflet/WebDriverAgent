@@ -13,8 +13,18 @@
 #import "XCSynthesizedEventRecord.h"
 #import "XCTRunnerDaemonSession.h"
 #import "XCUIApplication+FBHelpers.h"
+#import "XCUIApplication.h"
 #import "FBXCTestDaemonsProxy.h"
 #import "FBConfiguration.h"
+
+// Session-less GADS touches take points in the device's native portrait space, whatever the
+// interface orientation: clients (hub-ui, front ends) convert landscape points to that space. The
+// event records used to say orientation 0 (unknown), which some UI ignores, e.g. Safari's website
+// permission prompt. Portrait keeps the same coordinate space with a valid orientation.
+static UIInterfaceOrientation FBGadsActiveOrientation(void)
+{
+  return UIInterfaceOrientationPortrait;
+}
 
 // Buffered typing state
 static dispatch_queue_t _typeBufferQueue;
@@ -100,7 +110,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [pointerEventPath liftUpAtOffset:tapDuration];  // Lift finger after duration
 
   // Package the touch event for execution
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:pointerEventPath];
 
   // Execute tap event asynchronously
@@ -140,7 +150,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [pointerEventPath liftUpAtOffset:delay];               // Lift finger when movement completes
 
   // Package the swipe gesture for execution
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:pointerEventPath];
 
   // Execute swipe event asynchronously
@@ -176,7 +186,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [pointerEventPath pressDownAtOffset: delay];  // Maintain pressure for delay duration
 
   // Package the long-press gesture for execution
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:nil interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:pointerEventPath];
 
   // Execute touch-and-hold event asynchronously
@@ -233,7 +243,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [finger2Path liftUpAtOffset:duration];
 
   // Coordinate both finger paths in a single multi-touch event
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"Pinch" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"Pinch" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:finger1Path];
   [eventRecord addPointerEventPath:finger2Path];
 
@@ -287,7 +297,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [dragPath liftUpAtOffset:holdTime + dragDuration];
 
   // Package drag and drop gesture for execution
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"DragDrop" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"DragDrop" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:dragPath];
 
   // Execute drag and drop event asynchronously
@@ -342,7 +352,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [edgePath moveToPoint:endPoint atOffset:duration];
   [edgePath liftUpAtOffset:duration];
 
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"EdgeSwipeLowLevel" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"EdgeSwipeLowLevel" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:edgePath];
 
   [[self eventSynthesizer] synthesizeEvent:eventRecord completion:(id)^(BOOL result, NSError *invokeError) {}];
@@ -400,7 +410,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [secondTapPath liftUpAtOffset:secondTapStartTime + singleTapDuration];
 
   // Package both taps as a single coordinated gesture
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"DoubleTap" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"DoubleTap" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:firstTapPath];
   [eventRecord addPointerEventPath:secondTapPath];
 
@@ -471,7 +481,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [finger2Path liftUpAtOffset:duration];
 
   // Coordinate both fingers as a single multi-touch scroll event
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"TwoFingerScroll" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"TwoFingerScroll" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:finger1Path];
   [eventRecord addPointerEventPath:finger2Path];
 
@@ -504,7 +514,7 @@ static const NSTimeInterval kTypeBufferFlushDelaySec = 0.05;
   [path moveToPoint:CGPointMake(midX, endY) atOffset:dwellEnd];
   [path liftUpAtOffset:liftAt];
 
-  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"AppSwitcher" interfaceOrientation:0];
+  XCSynthesizedEventRecord *eventRecord = [[XCSynthesizedEventRecord alloc] initWithName:@"AppSwitcher" interfaceOrientation:FBGadsActiveOrientation()];
   [eventRecord addPointerEventPath:path];
 
   [[self eventSynthesizer] synthesizeEvent:eventRecord completion:(id)^(BOOL result, NSError *invokeError) {
