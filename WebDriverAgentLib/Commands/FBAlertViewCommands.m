@@ -29,6 +29,7 @@
     [[FBRoute POST:@"/alert/dismiss"] respondWithTarget:self action:@selector(handleAlertDismissCommand:)],
     [[FBRoute POST:@"/alert/dismiss"].withoutSession respondWithTarget:self action:@selector(handleAlertDismissCommand:)],
     [[FBRoute GET:@"/wda/alert/buttons"] respondWithTarget:self action:@selector(handleGetAlertButtonsCommand:)],
+    [[FBRoute GET:@"/wda/alert/buttons"].withoutSession respondWithTarget:self action:@selector(handleGetAlertButtonsCommand:)],
   ];
 }
 
@@ -117,8 +118,8 @@
 }
 
 + (id<FBResponsePayload>)handleGetAlertButtonsCommand:(FBRouteRequest *)request {
-  FBSession *session = request.session;
-  FBAlert *alert = [FBAlert alertWithApplication:session.activeApplication];
+  XCUIApplication *application = request.session.activeApplication ?: XCUIApplication.fb_activeApplication;
+  FBAlert *alert = [FBAlert alertWithApplication:application];
 
   if (!alert.isPresent) {
     return FBResponseWithStatus([FBCommandStatus noAlertOpenErrorWithMessage:nil
